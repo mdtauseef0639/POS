@@ -55,7 +55,7 @@ const products = [
       price: 4,
       url: 'img/capcicum.jpeg',
     },
-    { id: 9, title: 'Onion', category: 'fruit', price: 20, url: 'img/onion.jpg' },
+    { id: 9, title: 'Onion', category: 'vegetables', price: 20, url: 'img/onion.jpg' },
     {
       id: 10,
       title: 'Mashroom',
@@ -98,6 +98,13 @@ const products = [
       price: 10,
       url: 'img/carrot.jpg',
     },
+    {
+      id:16,
+      title:'Pumpkin',
+      category: "seeds",
+      price:60,
+      url:'img/pumpkin.jpeg'
+    }
   ];
 
   export default products

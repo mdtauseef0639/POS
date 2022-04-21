@@ -25,7 +25,7 @@ function Product({ data, onAdd }) {
             <Button
               variant="primary"
               onClick={() => {
-                onAdd && onAdd(data);
+                onAdd(data);
               }}
             >
               Add to Cart
