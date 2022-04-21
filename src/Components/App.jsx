@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useState, useRef } from "react";
 import {
   ToastContainer,
   Toast,
@@ -21,20 +21,19 @@ let notifyNo = 0;
 function App() {
   const ref = useRef(null);
   const [cartItems, setCartItems] = React.useState([]);
-
   const [notification, setNotification] = React.useState([]);
 
   const [filterItem, setFilterItem] = useState(products);
 
-
-
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
   const [click, setClick] = useState({
-    byTitle: 0,
-    byPrice: 0,
-    byCategory: 0,
+    byTitle: null,
+    byPrice: null,
+    byCategory: null,
   });
+
+  const [sort, setSort] = useState("");
 
   const handleClick = (event) => {
     setShow(!show);
@@ -66,22 +65,104 @@ function App() {
     }
   }
 
-  function handleSort(e) {
-    const sort = e.target.name;
-
-    
-    if (sort === "byTitle") {
-      setFilterItem(filterItem.sort((a, b) => a.title.localeCompare(b.title)));
-    } else if (sort === "byPrice") {
-      setFilterItem(filterItem.sort((a, b) => { return a.price - b.price}));
-    } else if (sort === "byCategory") {
-      setFilterItem(
-        filterItem.sort((a, b) => a.category.localeCompare(b.category))
+  function Icon({ clicked }) {
+    if (clicked === "null") {
+      return <></>;
+    } else if (clicked === true) {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          className="bi bi-sort-up"
+          viewBox="0 0 16 16"
+        >
+          <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z" />
+        </svg>
       );
-    } else if (sort === "clear") {
+    } else if (clicked === false) {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          className="bi bi-sort-down"
+          viewBox="0 0 16 16"
+        >
+          <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z" />
+        </svg>
+      );
+    }
+  }
+
+  function handleSort() {
+    if (sort === "byTitle") {
+      if (click.byTitle === true) {
+        setFilterItem(
+          filterItem.sort((a, b) => b.title.localeCompare(a.title))
+        );
+      } else if (click.byTitle === false) {
+        setFilterItem(
+          filterItem.sort((a, b) => a.title.localeCompare(b.title))
+        );
+      }
+    } else if (sort === "byPrice") {
+      if (click.byPrice === true) {
+        setFilterItem(filterItem.sort((a, b) => b.price - a.price));
+      } else if (click.byPrice === false) {
+        setFilterItem(filterItem.sort((a, b) => a.price - b.price));
+      }
+    } else if (sort === "byCategory") {
+      if (click.byCategory === true) {
+        setFilterItem(
+          filterItem.sort((a, b) => b.category.localeCompare(a.category))
+        );
+      } else if (click.byCategory === false) {
+        setFilterItem(
+          filterItem.sort((a, b) => a.category.localeCompare(b.category))
+        );
+      }
+    } else {
       setFilterItem(filterItem.sort((a, b) => a.id - b.id));
     }
   }
+
+  function handleSortType(e) {
+    const sort = e.target.name;
+    setSort(true);
+    setClick((x) => {
+      return { ...x, sort: true };
+    });
+
+    if (sort === "byTitle") {
+      setClick((x) => {
+        return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
+      });
+      setSort("byTitle");
+      handleSort();
+    } else if (sort === "byPrice") {
+      setClick((x) => {
+        return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
+      });
+      setSort("byPrice");
+      handleSort();
+    } else if (sort === "byCategory") {
+      setClick((x) => {
+        return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
+      });
+      setSort("byCategory");
+      handleSort();
+    } else if (sort === "clear") {
+      setClick((x) => {
+        return { byTitle: null, byPrice: null, byCategory: null };
+      });
+      setSort("");
+      handleSort();
+    }
+  }
+  console.log(click);
 
   function handleAddToCart(product) {
     setNotification((notification) => [
@@ -136,7 +217,7 @@ function App() {
           ...items[itemIndex],
           qty: items[itemIndex].qty - 1,
         };
-      } else if(items[itemIndex].qty===0) {
+      } else if (items[itemIndex].qty === 0) {
         items.splice(itemIndex);
       }
       return [...items];
@@ -164,29 +245,32 @@ function App() {
             <NavDropdown title="Sort" id="basic-nav-dropdown">
               <NavDropdown.Item
                 href="#action/3.1"
-                onClick={handleSort}
+                onClick={handleSortType}
                 name="byTitle"
               >
-                By Title{click ? "" : ""}
+                By Title
+                <Icon clicked={click.byTitle} />
               </NavDropdown.Item>
               <NavDropdown.Item
                 href="#action/3.2"
-                onClick={handleSort}
+                onClick={handleSortType}
                 name="byPrice"
               >
                 By Price
+                <Icon clicked={click.byPrice} />
               </NavDropdown.Item>
               <NavDropdown.Item
                 href="#action/3.3"
-                onClick={handleSort}
+                onClick={handleSortType}
                 name="byCategory"
               >
                 By Category
+                <Icon clicked={click.byCategory} />
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
                 href="#action/3.4"
-                onClick={handleSort}
+                onClick={handleSortType}
                 name="clear"
               >
                 Clear
