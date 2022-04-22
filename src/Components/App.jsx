@@ -100,13 +100,9 @@ function App() {
   function handleSort() {
     if (sort === "byTitle") {
       if (click.byTitle === true) {
-        setFilterItem(
-          filterItem.sort((a, b) => b.title.localeCompare(a.title))
-        );
+        setFilterItem(filterItem.sort((a, b) => b.title.localeCompare(a.title)));
       } else if (click.byTitle === false) {
-        setFilterItem(
-          filterItem.sort((a, b) => a.title.localeCompare(b.title))
-        );
+        setFilterItem(filterItem.sort((a, b) => a.title.localeCompare(b.title)));
       }
     } else if (sort === "byPrice") {
       if (click.byPrice === true) {
@@ -135,7 +131,6 @@ function App() {
     setClick((x) => {
       return { ...x, sort: true };
     });
-
     if (sort === "byTitle") {
       setClick((x) => {
         return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
@@ -212,12 +207,12 @@ function App() {
     setCartItems((items) => {
       const itemIndex = items.findIndex((item) => item.product.id === id);
 
-      if (items[itemIndex].qty >= 1) {
+      if (items[itemIndex].qty >1) {
         items[itemIndex] = {
           ...items[itemIndex],
           qty: items[itemIndex].qty - 1,
         };
-      } else if (items[itemIndex].qty === 0) {
+      } else{
         items.splice(itemIndex);
       }
       return [...items];
