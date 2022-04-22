@@ -1,4 +1,4 @@
-import React, {useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ToastContainer,
   Toast,
@@ -22,8 +22,11 @@ function App() {
   const ref = useRef(null);
   const [cartItems, setCartItems] = React.useState([]);
   const [notification, setNotification] = React.useState([]);
-
+  const [listItem, setListItem] = useState(products);
   const [filterItem, setFilterItem] = useState(products);
+  const [sortedItem, setSortedItem] = useState(products);
+
+  // const [listItem, setListItem] = useState(products);
 
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
@@ -97,67 +100,73 @@ function App() {
     }
   }
 
-  function handleSort() {
-    if (sort === "byTitle") {
-      if (click.byTitle === true) {
-        setFilterItem(filterItem.sort((a, b) => b.title.localeCompare(a.title)));
-      } else if (click.byTitle === false) {
-        setFilterItem(filterItem.sort((a, b) => a.title.localeCompare(b.title)));
-      }
-    } else if (sort === "byPrice") {
-      if (click.byPrice === true) {
-        setFilterItem(filterItem.sort((a, b) => b.price - a.price));
-      } else if (click.byPrice === false) {
-        setFilterItem(filterItem.sort((a, b) => a.price - b.price));
-      }
-    } else if (sort === "byCategory") {
-      if (click.byCategory === true) {
-        setFilterItem(
-          filterItem.sort((a, b) => b.category.localeCompare(a.category))
-        );
-      } else if (click.byCategory === false) {
-        setFilterItem(
-          filterItem.sort((a, b) => a.category.localeCompare(b.category))
-        );
-      }
-    } else {
-      setFilterItem(filterItem.sort((a, b) => a.id - b.id));
-    }
-  }
-
   function handleSortType(e) {
     const sort = e.target.name;
-    setSort(true);
+    const list = [...listItem]
+    // setSort(true);
     setClick((x) => {
       return { ...x, sort: true };
     });
     if (sort === "byTitle") {
+      setSort("byTitle");
+      handleSort(list);
       setClick((x) => {
         return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
       });
-      setSort("byTitle");
-      handleSort();
     } else if (sort === "byPrice") {
+      setSort("byPrice");
+      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
       });
-      setSort("byPrice");
-      handleSort();
     } else if (sort === "byCategory") {
+      setSort("byCategory");
+      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
       });
-      setSort("byCategory");
-      handleSort();
     } else if (sort === "clear") {
+      setSort("");
+      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: null };
       });
-      setSort("");
-      handleSort();
     }
   }
+  function handleSort(list) {
+    
+    if (sort === "byTitle") {
+      if (click.byTitle === true) {
+        setSortedItem([...filterItem].sort((a, b) => b.title.localeCompare(a.title)));
+      } else if (click.byTitle === false) {
+        setSortedItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
+      }
+    } else if (sort === "byPrice") {
+      if (click.byPrice === true) {
+        setSortedItem([...list].sort((a, b) => b.price - a.price));
+      } else if (click.byPrice === false) {
+        setSortedItem([...list].sort((a, b) => a.price - b.price));
+      }
+    } else if (sort === "byCategory") {
+      if (click.byCategory === true) {
+        setSortedItem(
+          [...list].sort((a, b) => b.category.localeCompare(a.category))
+        );
+      } else if (click.byCategory === false) {
+        setSortedItem(
+          [...list].sort((a, b) => a.category.localeCompare(b.category))
+        );
+      }
+    } else {
+      setSortedItem([...list].sort((a, b) => a.id - b.id));
+    }
+  }
+
   console.log(click);
+
+  // useEffect(()=>{
+  //   setFilterItem(filterItem)
+  // },[filterItem])
 
   function handleAddToCart(product) {
     setNotification((notification) => [
@@ -207,17 +216,25 @@ function App() {
     setCartItems((items) => {
       const itemIndex = items.findIndex((item) => item.product.id === id);
 
-      if (items[itemIndex].qty >1) {
+      if (items[itemIndex].qty > 1) {
         items[itemIndex] = {
           ...items[itemIndex],
           qty: items[itemIndex].qty - 1,
         };
-      } else{
+      } else {
         items.splice(itemIndex);
       }
       return [...items];
     });
   }
+
+  useEffect(() => {
+    setListItem(filterItem);
+  }, [filterItem]);
+
+  useEffect(() => {
+    setListItem(sortedItem);
+  }, [sortedItem]);
 
   return (
     <div className="App">
@@ -291,16 +308,17 @@ function App() {
               </sup>
             </Nav.Link>
             <Overlay
+              style={{ width: "300px" }}
               show={show}
               target={target}
               placement="bottom"
               container={ref}
               containerPadding={20}
             >
-              <Popover id="popover-contained">
+              <Popover id="popover-contained" style={{ width: "320px" }}>
                 <Popover.Header as="h3">Cart</Popover.Header>
                 <Popover.Body>
-                  <Cart items={cartItems} onAdd={onAdd} />
+                  <Cart items={cartItems} onAdd={onAdd} onRemove={onRemove} />
                 </Popover.Body>
               </Popover>
             </Overlay>
@@ -311,7 +329,7 @@ function App() {
       <Container fluid>
         <Row>
           <Col md={8}>
-            <ProductList products={filterItem} onAddToCart={handleAddToCart} />
+            <ProductList products={listItem} onAddToCart={handleAddToCart} />
           </Col>
           <Col md={4}>
             <Cart items={cartItems} onAdd={onAdd} onRemove={onRemove} />
