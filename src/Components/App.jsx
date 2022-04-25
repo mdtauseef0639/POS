@@ -102,71 +102,67 @@ function App() {
 
   function handleSortType(e) {
     const sort = e.target.name;
-    const list = [...listItem]
     // setSort(true);
     setClick((x) => {
       return { ...x, sort: true };
     });
     if (sort === "byTitle") {
       setSort("byTitle");
-      handleSort(list);
+      
       setClick((x) => {
         return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
       });
+
+      handleSort(listItem,sort);
     } else if (sort === "byPrice") {
       setSort("byPrice");
-      handleSort(list);
+      
       setClick((x) => {
         return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
       });
+      handleSort(listItem,sort);
     } else if (sort === "byCategory") {
       setSort("byCategory");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
       });
+      handleSort(listItem,sort);
     } else if (sort === "clear") {
       setSort("");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: null };
       });
+      handleSort(listItem,sort);
     }
   }
-  function handleSort(list) {
+  function handleSort(list,sortType) {
     
-    if (sort === "byTitle") {
+    if (sort === sortType) {
       if (click.byTitle === true) {
-        setSortedItem([...filterItem].sort((a, b) => b.title.localeCompare(a.title)));
+        setFilterItem([...filterItem].sort((a, b) => b.title.localeCompare(a.title)));
       } else if (click.byTitle === false) {
-        setSortedItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
+        setFilterItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
       }
-    } else if (sort === "byPrice") {
+    } else if (sort === sortType) {
       if (click.byPrice === true) {
-        setSortedItem([...list].sort((a, b) => b.price - a.price));
+        setFilterItem([...list].sort((a, b) => b.price - a.price));
       } else if (click.byPrice === false) {
-        setSortedItem([...list].sort((a, b) => a.price - b.price));
+        setFilterItem([...list].sort((a, b) => a.price - b.price));
       }
-    } else if (sort === "byCategory") {
+    } else if (sort === sortType) {
       if (click.byCategory === true) {
-        setSortedItem(
+        setFilterItem(
           [...list].sort((a, b) => b.category.localeCompare(a.category))
         );
       } else if (click.byCategory === false) {
-        setSortedItem(
+        setFilterItem(
           [...list].sort((a, b) => a.category.localeCompare(b.category))
         );
       }
     } else {
-      setSortedItem([...list].sort((a, b) => a.id - b.id));
+      setFilterItem([...list].sort((a, b) => a.id - b.id));
     }
   }
-
-  console.log(click);
-
-  // useEffect(()=>{
-  //   setFilterItem(filterItem)
-  // },[filterItem])
 
   function handleAddToCart(product) {
     setNotification((notification) => [
@@ -228,13 +224,7 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    setListItem(filterItem);
-  }, [filterItem]);
-
-  useEffect(() => {
-    setListItem(sortedItem);
-  }, [sortedItem]);
+  
 
   return (
     <div className="App">
@@ -329,7 +319,7 @@ function App() {
       <Container fluid>
         <Row>
           <Col md={8}>
-            <ProductList products={listItem} onAddToCart={handleAddToCart} />
+            <ProductList products={filterItem} onAddToCart={handleAddToCart} />
           </Col>
           <Col md={4}>
             <Cart items={cartItems} onAdd={onAdd} onRemove={onRemove} />
