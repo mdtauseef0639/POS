@@ -46,21 +46,21 @@ function App() {
   function handleFilter(e) {
     const category = e.target.name;
     if (category === "all") {
-      setFilterItem(products);
+      setListItem(products);
     } else if (category === "fruits") {
-      setFilterItem(
+      setListItem(
         products.filter((x) => {
           return x.category === "fruit";
         })
       );
     } else if (category === "vegetables") {
-      setFilterItem(
+      setListItem(
         products.filter((x) => {
           return x.category === "vegetables";
         })
       );
     } else if (category === "seeds") {
-      setFilterItem(
+      setListItem(
         products.filter((x) => {
           return x.category === "seeds";
         })
@@ -102,71 +102,71 @@ function App() {
 
   function handleSortType(e) {
     const sort = e.target.name;
-    const list = [...listItem]
+    
     // setSort(true);
     setClick((x) => {
       return { ...x, sort: true };
     });
     if (sort === "byTitle") {
       setSort("byTitle");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
       });
     } else if (sort === "byPrice") {
       setSort("byPrice");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
       });
     } else if (sort === "byCategory") {
       setSort("byCategory");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
       });
     } else if (sort === "clear") {
       setSort("");
-      handleSort(list);
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: null };
       });
     }
   }
-  function handleSort(list) {
-    
+
+  const stringCompare = (a,b)=>{
+    return a.localeCompare(b)
+  }
+
+  const numberCompare = (a,b)=>{
+    return a - b 
+  }
+
+  const handleSort=React.useCallback(()=>{
     if (sort === "byTitle") {
       if (click.byTitle === true) {
-        setSortedItem([...filterItem].sort((a, b) => b.title.localeCompare(a.title)));
+        setFilterItem(
+          [...filterItem].sort((a, b) => stringCompare(b.title,a.title))
+        );
       } else if (click.byTitle === false) {
-        setSortedItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
+        setFilterItem([...filterItem].sort((a, b) => stringCompare(a.title,b.title)));
       }
     } else if (sort === "byPrice") {
       if (click.byPrice === true) {
-        setSortedItem([...list].sort((a, b) => b.price - a.price));
+        setFilterItem([...filterItem].sort((a,b)=>numberCompare(b.price,a.price)));
       } else if (click.byPrice === false) {
-        setSortedItem([...list].sort((a, b) => a.price - b.price));
+        setFilterItem([...filterItem].sort((a, b) => numberCompare(a.price,b.price)));
       }
     } else if (sort === "byCategory") {
       if (click.byCategory === true) {
-        setSortedItem(
-          [...list].sort((a, b) => b.category.localeCompare(a.category))
+        setFilterItem([...filterItem].sort((a, b) => stringCompare(b.category,a.category))
         );
       } else if (click.byCategory === false) {
-        setSortedItem(
-          [...list].sort((a, b) => a.category.localeCompare(b.category))
+        setFilterItem([...filterItem].sort((a, b) => stringCompare(a.category,b.category))
         );
       }
     } else {
-      setSortedItem([...list].sort((a, b) => a.id - b.id));
+      setFilterItem([...filterItem].sort((a, b) => numberCompare(a.id,b.id)));
     }
-  }
-
-  console.log(click);
-
-  // useEffect(()=>{
-  //   setFilterItem(filterItem)
-  // },[filterItem])
+},[sort,click,filterItem]) 
+    
+  
 
   function handleAddToCart(product) {
     setNotification((notification) => [
@@ -228,13 +228,11 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    setListItem(filterItem);
-  }, [filterItem]);
+  useEffect(()=>{
+    handleSort()
+  },[sort,click,handleSort])
 
-  useEffect(() => {
-    setListItem(sortedItem);
-  }, [sortedItem]);
+   
 
   return (
     <div className="App">
@@ -329,7 +327,7 @@ function App() {
       <Container fluid>
         <Row>
           <Col md={8}>
-            <ProductList products={listItem} onAddToCart={handleAddToCart} />
+            <ProductList products={filterItem} onAddToCart={handleAddToCart} />
           </Col>
           <Col md={4}>
             <Cart items={cartItems} onAdd={onAdd} onRemove={onRemove} />
