@@ -113,54 +113,55 @@ function App() {
         return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
       });
 
-      handleSort(listItem,sort);
+      handleSort(listItem,sort,click);
     } else if (sort === "byPrice") {
       setSort("byPrice");
       
       setClick((x) => {
         return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
       });
-      handleSort(listItem,sort);
+      handleSort(listItem,sort,click);
     } else if (sort === "byCategory") {
       setSort("byCategory");
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
       });
-      handleSort(listItem,sort);
+      handleSort(listItem,sort,click);
     } else if (sort === "clear") {
       setSort("");
       setClick((x) => {
         return { byTitle: null, byPrice: null, byCategory: null };
       });
-      handleSort(listItem,sort);
+      handleSort(listItem,sort,click);
+      
     }
-  }
-  function handleSort(list,sortType) {
     
-    if (sort === sortType) {
-      if (click.byTitle === true) {
-        setFilterItem([...filterItem].sort((a, b) => b.title.localeCompare(a.title)));
+  }
+  function handleSort(list,sortType,clickType) {
+    if (sortType === "byTitle") {
+      if (clickType.byTitle === true) {
+        setFilterItem(list.sort((a, b) => b.title.localeCompare(a.title)));
       } else if (click.byTitle === false) {
-        setFilterItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
+        setFilterItem(list.sort((a, b) => a.title.localeCompare(b.title)));
       }
-    } else if (sort === sortType) {
-      if (click.byPrice === true) {
-        setFilterItem([...list].sort((a, b) => b.price - a.price));
+    } else if (sortType === "byPrice") {
+      if (clickType.byPrice === true) {
+        setFilterItem(list.sort((a, b) => b.price - a.price));
       } else if (click.byPrice === false) {
-        setFilterItem([...list].sort((a, b) => a.price - b.price));
+        setFilterItem(list.sort((a, b) => a.price - b.price));
       }
-    } else if (sort === sortType) {
-      if (click.byCategory === true) {
+    } else if (sortType === "byCategory") {
+      if (clickType.byCategory === true) {
         setFilterItem(
-          [...list].sort((a, b) => b.category.localeCompare(a.category))
+          list.sort((a, b) => b.category.localeCompare(a.category))
         );
-      } else if (click.byCategory === false) {
+      } else if (clickType.byCategory === false) {
         setFilterItem(
-          [...list].sort((a, b) => a.category.localeCompare(b.category))
+          list.sort((a, b) => a.category.localeCompare(b.category))
         );
       }
     } else {
-      setFilterItem([...list].sort((a, b) => a.id - b.id));
+      setFilterItem(list.sort((a, b) => a.id - b.id));
     }
   }
 
