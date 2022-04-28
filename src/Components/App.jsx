@@ -22,9 +22,7 @@ function App() {
   const ref = useRef(null);
   const [cartItems, setCartItems] = React.useState([]);
   const [notification, setNotification] = React.useState([]);
-  const [listItem, setListItem] = useState(products);
   const [filterItem, setFilterItem] = useState(products);
-  const [sortedItem, setSortedItem] = useState(products);
 
   // const [listItem, setListItem] = useState(products);
 
@@ -46,21 +44,21 @@ function App() {
   function handleFilter(e) {
     const category = e.target.name;
     if (category === "all") {
-      setListItem(products);
+      setFilterItem(products);
     } else if (category === "fruits") {
-      setListItem(
+      setFilterItem(
         products.filter((x) => {
           return x.category === "fruit";
         })
       );
     } else if (category === "vegetables") {
-      setListItem(
+      setFilterItem(
         products.filter((x) => {
           return x.category === "vegetables";
         })
       );
     } else if (category === "seeds") {
-      setListItem(
+      setFilterItem(
         products.filter((x) => {
           return x.category === "seeds";
         })
