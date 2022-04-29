@@ -106,23 +106,23 @@ function App() {
       const value ={ byTitle: !click.byTitle, byPrice: null, byCategory: null }
       setSort("byTitle");
       setClick(value);
-      handleSort(listItem,sort,value);
+      handleSort(filterItem,sort,value);
     } else if (sort === "byPrice") {
       const value ={ byTitle: null, byPrice: !click.byPrice, byCategory: null }
       setSort("byPrice");
       setClick(value);
       
-      handleSort(listItem,sort,value);
+      handleSort(filterItem,sort,value);
     } else if (sort === "byCategory") {
       setSort("byCategory");
       const value ={ byTitle: null, byPrice: null, byCategory: !click.byCategory }
       setClick(value);
-      handleSort(listItem,sort,value);
+      handleSort(filterItem,sort,value);
     } else if (sort === "clear") {
       setSort("");
       const value ={ byTitle: null, byPrice: null, byCategory: null}
       setClick(value);
-      handleSort(listItem,sort,click);
+      handleSort(filterItem,sort,click);
       
     }
     
@@ -130,28 +130,28 @@ function App() {
   function handleSort(list,sortType,clickType) {
     if (sortType === "byTitle") {
       if (clickType.byTitle === true) {
-        setFilterItem(list.sort((a, b) => a.title.localeCompare(b.title)));
+        setFilterItem([...list].sort((a, b) => a.title.localeCompare(b.title)));
       } else if (clickType.byTitle === false) {
-        setFilterItem(list.sort((a, b) => b.title.localeCompare(a.title)));
+        setFilterItem([...list].sort((a, b) => b.title.localeCompare(a.title)));
       }
     } else if (sortType === "byPrice") {
       if (clickType.byPrice === true) {
-        setFilterItem(list.sort((a, b) => a.price - b.price));
+        setFilterItem([...list].sort((a, b) => a.price - b.price));
       } else if (clickType.byPrice === false) {
-        setFilterItem(list.sort((a, b) => b.price - a.price));
+        setFilterItem([...list].sort((a, b) => b.price - a.price));
       }
     } else if (sortType === "byCategory") {
       if (clickType.byCategory === true) {
         setFilterItem(
-          list.sort((a, b) => a.category.localeCompare(b.category))
+          [...list].sort((a, b) => a.category.localeCompare(b.category))
         );
       } else if (clickType.byCategory === false) {
         setFilterItem(
-          list.sort((a, b) => b.category.localeCompare(a.category))
+          [...list].sort((a, b) => b.category.localeCompare(a.category))
         );
       }
     } else {
-      setFilterItem(list.sort((a, b) => a.id - b.id));
+      setFilterItem([...list].sort((a, b) => a.id - b.id));
     }
   }
 
