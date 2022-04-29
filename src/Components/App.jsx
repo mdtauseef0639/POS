@@ -102,36 +102,26 @@ function App() {
 
   function handleSortType(e) {
     const sort = e.target.name;
-    // setSort(true);
-    setClick((x) => {
-      return { ...x, sort: true };
-    });
-    if (sort === "byTitle") {
+    if (sort === "byTitle") { 
+      const value ={ byTitle: !click.byTitle, byPrice: null, byCategory: null }
       setSort("byTitle");
-      
-      setClick((x) => {
-        return { byTitle: !x.byTitle, byPrice: null, byCategory: null };
-      });
-
-      handleSort(listItem,sort,click);
+      setClick(value);
+      handleSort(listItem,sort,value);
     } else if (sort === "byPrice") {
+      const value ={ byTitle: null, byPrice: !click.byPrice, byCategory: null }
       setSort("byPrice");
+      setClick(value);
       
-      setClick((x) => {
-        return { byTitle: null, byPrice: !x.byPrice, byCategory: null };
-      });
-      handleSort(listItem,sort,click);
+      handleSort(listItem,sort,value);
     } else if (sort === "byCategory") {
       setSort("byCategory");
-      setClick((x) => {
-        return { byTitle: null, byPrice: null, byCategory: !x.byCategory };
-      });
-      handleSort(listItem,sort,click);
+      const value ={ byTitle: null, byPrice: null, byCategory: !click.byCategory }
+      setClick(value);
+      handleSort(listItem,sort,value);
     } else if (sort === "clear") {
       setSort("");
-      setClick((x) => {
-        return { byTitle: null, byPrice: null, byCategory: null };
-      });
+      const value ={ byTitle: null, byPrice: null, byCategory: null}
+      setClick(value);
       handleSort(listItem,sort,click);
       
     }
@@ -140,24 +130,24 @@ function App() {
   function handleSort(list,sortType,clickType) {
     if (sortType === "byTitle") {
       if (clickType.byTitle === true) {
-        setFilterItem(list.sort((a, b) => b.title.localeCompare(a.title)));
-      } else if (click.byTitle === false) {
         setFilterItem(list.sort((a, b) => a.title.localeCompare(b.title)));
+      } else if (clickType.byTitle === false) {
+        setFilterItem(list.sort((a, b) => b.title.localeCompare(a.title)));
       }
     } else if (sortType === "byPrice") {
       if (clickType.byPrice === true) {
-        setFilterItem(list.sort((a, b) => b.price - a.price));
-      } else if (click.byPrice === false) {
         setFilterItem(list.sort((a, b) => a.price - b.price));
+      } else if (clickType.byPrice === false) {
+        setFilterItem(list.sort((a, b) => b.price - a.price));
       }
     } else if (sortType === "byCategory") {
       if (clickType.byCategory === true) {
         setFilterItem(
-          list.sort((a, b) => b.category.localeCompare(a.category))
+          list.sort((a, b) => a.category.localeCompare(b.category))
         );
       } else if (clickType.byCategory === false) {
         setFilterItem(
-          list.sort((a, b) => a.category.localeCompare(b.category))
+          list.sort((a, b) => b.category.localeCompare(a.category))
         );
       }
     } else {
