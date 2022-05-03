@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   ToastContainer,
   Toast,
@@ -22,11 +22,9 @@ function App() {
   const ref = useRef(null);
   const [cartItems, setCartItems] = React.useState([]);
   const [notification, setNotification] = React.useState([]);
-  const [listItem, setListItem] = useState(products);
   const [filterItem, setFilterItem] = useState(products);
-  const [sortedItem, setSortedItem] = useState(products);
 
-  // const [listItem, setListItem] = useState(products);
+
 
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
