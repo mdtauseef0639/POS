@@ -236,7 +236,7 @@ function App() {
     <div className="App">
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container fluid>
-          <Navbar.Brand href="/">Axelor POS</Navbar.Brand>
+          <Navbar.Brand href="/">Apna Store</Navbar.Brand>
           <Nav className="me-auto navbar navbar-expand-lg">
             <Nav.Link href="#home" onClick={handleFilter} name="all">
               All
